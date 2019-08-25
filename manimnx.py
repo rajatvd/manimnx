@@ -8,14 +8,18 @@ from manimlib.imports import *
 
 
 class ManimNX(VGroup):
-    def __init__(self, graph, **kwargs):
+    def __init__(self, graph, get_node, get_edge, **kwargs):
         super().__init__(**kwargs)
         self.graph = graph
+        self.get_edge = get_edge
+        self.get_node = get_node
         self.add_edges()
         self.add_nodes()
 
     def add_nodes(self):
-        pass
+        for node in self.graph.nodes:
+            self.get_node(node)
 
     def add_edges(self):
-        pass
+        for n1, n2 in self.graph.edges:
+            self.get_edge(n1, n2)
