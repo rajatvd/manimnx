@@ -33,6 +33,8 @@ import numpy as np
 import random
 
 
+# Define methods to create vmobjects for nodes and edges using their networkx attributes
+
 def get_node(n):
     """Get a Dot node."""
     node = Dot(color=n.get('color', RED))
