@@ -9,6 +9,30 @@ from manimlib.imports import *
 
 
 class ManimGraph(VGroup):
+    """A manim VGroup which wraps a networkx Graph.
+
+    Parameters
+    ----------
+    graph : networkx.Graph
+        The graph to wrap.
+    get_node : function (dict) -> VMobject
+        Create the VMobject for the given node attributes.
+    get_edge : function (dict, dict) -> VMobject
+        Create the VMobject for the edge between the given node attributes.
+
+    Additional kwargs are passed to VGroup.
+
+    Attributes
+    ----------
+    edges : dict
+        Dictionary similar to Graph.edges with elements being the created
+        VMobjects for the edges.
+    nodes : dict
+        Dictionary similar to Graph.nodes with elements being the created
+        VMobjects for the nodes.
+
+    """
+
     def __init__(self, graph, get_node, get_edge, **kwargs):
         super().__init__(**kwargs)
         self.graph = graph
@@ -30,12 +54,14 @@ class ManimGraph(VGroup):
         self.add_edges()
 
     def add_nodes(self):
+        """Create nodes using get_node and add to submobjects and nodes dict."""
         for node in self.graph.nodes:
             n = self.get_node(self.graph.node[node])
             self.nodes[node] = n
             self.add(n)
 
     def add_edges(self):
+        """Create edges using get_edge and add to submobjects and edges dict."""
         for n1, n2 in self.graph.edges:
             e = self.get_edge(self.graph.node[n1], self.graph.node[n2])
             self.edges[n1, n2] = e
