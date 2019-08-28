@@ -76,7 +76,7 @@ class RandomGraphs(Scene):
         mng2 = mnx.ManimGraph(G2, get_node, get_edge)
 
         self.play(*[ShowCreation(m) for m in mng1])  # create G1
-        self.wait(2)
+        self.wait(1)
 
 #         edges1 = VGroup()
 #         edges1.add(*mng1.edges.values())
@@ -86,4 +86,4 @@ class RandomGraphs(Scene):
 
 #         self.play(Transform(edges1, edges2))
         self.play(Transform(mng1, mng2))  # transform G1 to G2
-        self.wait(2)
+        self.wait(1)
