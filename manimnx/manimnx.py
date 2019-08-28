@@ -8,12 +8,15 @@ from manimlib.imports import *
 # get item and stuff similar to nx but return the vmobject instead of the key
 
 
-class ManimNX(VGroup):
+class ManimGraph(VGroup):
     def __init__(self, graph, get_node, get_edge, **kwargs):
         super().__init__(**kwargs)
         self.graph = graph
         self.get_edge = get_edge
         self.get_node = get_node
+
+        self.edges = {}
+        self.nodes = {}
 
         n = list(self.graph.nodes())[0]
         scale = np.array([6.5, 3.5])
@@ -29,9 +32,11 @@ class ManimNX(VGroup):
     def add_nodes(self):
         for node in self.graph.nodes:
             n = self.get_node(self.graph.node[node])
+            self.nodes[node] = n
             self.add(n)
 
     def add_edges(self):
         for n1, n2 in self.graph.edges:
             e = self.get_edge(self.graph.node[n1], self.graph.node[n2])
+            self.edges[n1, n2] = e
             self.add_to_back(e)
