@@ -15,10 +15,11 @@ class ManimGraph(VGroup):
     ----------
     graph : networkx.Graph
         The graph to wrap.
-    get_node : function (dict) -> VMobject
-        Create the VMobject for the given node attributes.
-    get_edge : function (dict, dict) -> VMobject
-        Create the VMobject for the edge between the given node attributes.
+    get_node : function (node, Graph) -> VMobject
+        Create the VMobject for the given node in the given Graph.
+    get_edge : function (node1, node2, Graph) -> VMobject
+        Create the VMobject for the edge between the given nodes in the given
+        Graph.
 
     Additional kwargs are passed to VGroup.
 
@@ -56,13 +57,13 @@ class ManimGraph(VGroup):
     def add_nodes(self):
         """Create nodes using get_node and add to submobjects and nodes dict."""
         for node in self.graph.nodes:
-            n = self.get_node(self.graph.node[node])
+            n = self.get_node(node, self.graph)
             self.nodes[node] = n
             self.add(n)
 
     def add_edges(self):
         """Create edges using get_edge and add to submobjects and edges dict."""
         for n1, n2 in self.graph.edges:
-            e = self.get_edge(self.graph.node[n1], self.graph.node[n2])
+            e = self.get_edge(n1, n2, self.graph)
             self.edges[n1, n2] = e
             self.add_to_back(e)

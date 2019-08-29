@@ -35,16 +35,19 @@ import random
 
 # Define methods to create vmobjects for nodes and edges using their networkx attributes
 
-def get_node(n):
+def get_node(n, G):
     """Get a Dot node."""
+    n = G.node[n]
     node = Dot(color=n.get('color', RED))
     x, y = n['pos']
     node.move_to(x*RIGHT + y*UP)
     return node
 
 
-def get_edge(n1, n2):
+def get_edge(n1, n2, G):
     """Get a Line edge."""
+    n1 = G.node[n1]
+    n2 = G.node[n2]
     x1, y1 = n1['pos']
     x2, y2 = n2['pos']
     start = x1*RIGHT + y1*UP

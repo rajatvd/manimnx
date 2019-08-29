@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 
-def get_node(n):
+def get_node(n, G):
     """Create a dot node with a given color.
 
     Uses RED by default.
@@ -21,13 +21,14 @@ def get_node(n):
         The Dot VMobject.
 
     """
+    n = G.node[n]
     node = Dot(color=n.get('color', RED))
     x, y = n['pos']
     node.move_to(x*RIGHT + y*UP)
     return node
 
 
-def get_edge(n1, n2):
+def get_edge(n1, n2, G):
     """Create a line edge using the color of node n1.
 
     Uses WHITE by default.
@@ -43,6 +44,8 @@ def get_edge(n1, n2):
         The Line VMobject.
 
     """
+    n1 = G.node[n1]
+    n2 = G.node[n2]
     x1, y1 = n1['pos']
     x2, y2 = n2['pos']
     start = x1*RIGHT + y1*UP
