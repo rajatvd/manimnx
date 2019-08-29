@@ -19,7 +19,8 @@ class ManimGraph(VGroup):
         Create the VMobject for the given node in the given Graph.
     get_edge : function (node1, node2, Graph) -> VMobject
         Create the VMobject for the edge between the given nodes in the given
-        Graph.
+        Graph. If the graph is a MultiGraph, the edge index k is also passed
+        into get_edge
 
     Additional kwargs are passed to VGroup.
 
@@ -63,7 +64,13 @@ class ManimGraph(VGroup):
 
     def add_edges(self):
         """Create edges using get_edge and add to submobjects and edges dict."""
-        for n1, n2 in self.graph.edges:
-            e = self.get_edge(n1, n2, self.graph)
-            self.edges[n1, n2] = e
-            self.add_to_back(e)
+        if isinstance(self.graph, nx.MultiGraph):
+            for n1, n2, k in self.graph.edges:
+                e = self.get_edge(n1, n2, k, self.graph)
+                self.edges[n1, n2] = e
+                self.add_to_back(e)
+        else:
+            for n1, n2 in self.graph.edges:
+                e = self.get_edge(n1, n2, self.graph)
+                self.edges[n1, n2] = e
+                self.add_to_back(e)
