@@ -67,7 +67,9 @@ class ManimGraph(VGroup):
         if isinstance(self.graph, nx.MultiGraph):
             for n1, n2, k in self.graph.edges:
                 e = self.get_edge(n1, n2, k, self.graph)
-                self.edges[n1, n2] = e
+                if (n1, n2) not in self.edges.keys():
+                    self.edges[n1, n2] = {}
+                self.edges[n1, n2][k] = e
                 self.add_to_back(e)
         else:
             for n1, n2 in self.graph.edges:
