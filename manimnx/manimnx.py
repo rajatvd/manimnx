@@ -64,22 +64,23 @@ class ManimGraph(VGroup):
     graph : networkx.Graph
         The graph to wrap.
     get_node : function (node, Graph) -> VMobject
-        Create the VMobject for the given node in the given Graph.
-    get_edge : function (node1, node2, Graph) -> VMobject
-        Create the VMobject for the edge between the given nodes in the given
-        Graph. If the graph is a MultiGraph, the edge index k is also passed
-        into get_edge
+        Create the VMobject for the given node key in the given Graph.
+    get_edge : function (edge, Graph) -> VMobject
+        Create the VMobject for the given edge key in the given Graph.
 
     Additional kwargs are passed to VGroup.
 
     Attributes
     ----------
-    edges : dict
-        Dictionary similar to Graph.edges with elements being the created
-        VMobjects for the edges.
     nodes : dict
-        Dictionary similar to Graph.nodes with elements being the created
-        VMobjects for the nodes.
+        Dict mapping mob_id -> node mobject
+    edges : dict
+        Dict mapping mob_id -> edge mobject
+    id_to_node: dict
+        Dict mapping mob_id -> node key
+    id_to_edge: dict
+        Dict mapping mob_id -> edge key
+
 
     """
 
@@ -91,8 +92,11 @@ class ManimGraph(VGroup):
         self.get_edge = get_edge
         self.get_node = get_node
 
-        self.edges = {}
         self.nodes = {}
+        self.edges = {}
+
+        self.id_to_node = {}
+        self.id_to_edge = {}
 
         n = list(self.graph.nodes())[0]
         scale = np.array([6.5, 3.5])
@@ -112,14 +116,16 @@ class ManimGraph(VGroup):
             n = self.get_node(node, self.graph)
             self.graph.nodes[node]['mob_id'] = self.count
             self.nodes[self.count] = n
+            self.id_to_node[self.count] = node
             self.add(n)
             self.count += 1
 
     def _add_edges(self):
         """Create edges using get_edge and add to submobjects and edges dict."""
-        for ed in self.graph.edges:
-            self.graph.edges[ed]['mob_id'] = self.count
-            e = self.get_edge(ed, self.graph)
+        for edge in self.graph.edges:
+            self.graph.edges[edge]['mob_id'] = self.count
+            e = self.get_edge(edge, self.graph)
             self.edges[self.count] = e
+            self.id_to_edge[self.count] = edge
             self.add_to_back(e)
             self.count += 1
