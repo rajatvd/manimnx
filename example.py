@@ -5,54 +5,6 @@ import numpy as np
 import random
 
 
-def get_node(n, G):
-    """Create a dot node with a given color.
-
-    Uses RED by default.
-
-    Parameters
-    ----------
-    n : dict
-        The node attributes.
-
-    Returns
-    -------
-    Dot
-        The Dot VMobject.
-
-    """
-    n = G.node[n]
-    node = Dot(color=n.get('color', RED))
-    x, y = n['pos']
-    node.move_to(x*RIGHT + y*UP)
-    return node
-
-
-def get_edge(n1, n2, G):
-    """Create a line edge using the color of node n1.
-
-    Uses WHITE by default.
-
-    Parameters
-    ----------
-    n1, n2: dict
-        Attributes of the nodes between which the edge exists
-
-    Returns
-    -------
-    Line
-        The Line VMobject.
-
-    """
-    n1 = G.node[n1]
-    n2 = G.node[n2]
-    x1, y1 = n1['pos']
-    x2, y2 = n2['pos']
-    start = x1*RIGHT + y1*UP
-    end = x2*RIGHT + y2*UP
-    return Line(start, end, color=n1.get('color', WHITE))
-
-
 class RandomGraphs(Scene):
 
     def construct(self):
@@ -71,22 +23,11 @@ class RandomGraphs(Scene):
             G2.nodes[node]['color'] = random.choice(COLORS)
 
         # make the manim graphs
-        mng1 = mnx.ManimGraph(G1, get_node, get_edge)
-
-#         for node in G2.nodes:
-#             G2.nodes[node]['pos'] = G1.nodes[node]['pos']
-
-        mng2 = mnx.ManimGraph(G2, get_node, get_edge)
+        mng1 = mnx.ManimGraph(G1)
+        mng2 = mnx.ManimGraph(G2)
 
         self.play(*[ShowCreation(m) for m in mng1])  # create G1
         self.wait(1)
 
-#         edges1 = VGroup()
-#         edges1.add(*mng1.edges.values())
-
-#         edges2 = VGroup()
-#         edges2.add(*mng2.edges.values())
-
-#         self.play(Transform(edges1, edges2))
         self.play(Transform(mng1, mng2))  # transform G1 to G2
         self.wait(1)
