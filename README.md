@@ -36,28 +36,45 @@ import random
 class RandomGraphs(Scene):
 
     def construct(self):
-
+        import time
         # list of colors to choose from
         COLORS = [RED, BLUE, GREEN, ORANGE, YELLOW]
-        np.random.seed()
+        np.random.seed(int(time.time()))
 
-        # make two random graphs
+        # make a random graph
         G1 = nx.erdos_renyi_graph(10, 0.5)
-        G2 = nx.erdos_renyi_graph(10, 0.5)
-
         # choose random colors for the nodes
-        for node in G1.nodes:
-            G1.nodes[node]['color'] = random.choice(COLORS)
-            G2.nodes[node]['color'] = random.choice(COLORS)
+        for node in G1.nodes.values():
+            node['color'] = random.choice(COLORS)
 
-        # make the manim graphs
-        mng1 = mnx.ManimGraph(G1)
-        mng2 = mnx.ManimGraph(G2)
+        # make the manim graph
+        mng = mnx.ManimGraph(G1)
 
-        self.play(*[ShowCreation(m) for m in mng1])  # create G1
+        self.play(*[ShowCreation(m) for m in mng])  # create G1
         self.wait(1)
 
-        self.play(Transform(mng1, mng2))  # transform G1 to G2
-        self.wait(1)
+        # lets get a new graph
+        G2 = G1.copy()
+        mnx.assign_positions(G2)  # assign new node positions
 
+        # add and remove random edges
+        new_G = nx.erdos_renyi_graph(10, 0.5)
+        G2.add_edges_from(new_G.edges)
+        for edge in G1.edges:
+            if edge not in new_G.edges:
+                G2.remove_edge(*edge)
+
+        # recolor nodes randomly
+        for node in G2.nodes.values():
+            node['color'] = random.choice(COLORS)
+
+        # the transform_graph function neatly moves nodes to their new
+        # positions along with edges that remain. New edges are faded in and
+        # removed ones are faded out. Try to replace this with a vanilla
+        # Transform and notice the difference.
+        self.play(*mnx.transform_graph(mng, G2))  # transform G1 to G2
+
+        # vanilla transform mixes up all mobjects, and doesn't look as good
+        # self.play(Transform(mng, mnx.ManimGraph(G2)))
+        self.wait(1)
 ```
