@@ -272,10 +272,12 @@ def transform_graph(mng, G):
             continue
 
         contracts_to = []
-        for node2, node_datfg in G.nodes.items():
-            for c2 in node_datfg.get('contraction', {}).values():
+        for node2, node_data in G.nodes.items():
+            for c2 in node_data.get('contraction', {}).values():
                 if mob_id == c2['mob_id']:
-                    contracts_to.append(id_to_mobj[node_datfg['mob_id']])
+                    contracts_to.append(
+                        mng.get_node(mng.id_to_node[node_data['mob_id']], G)
+                    )
                     break
 
         mobj = id_to_mobj[mob_id]
@@ -299,10 +301,12 @@ def transform_graph(mng, G):
             continue
 
         contracts_to = []
-        for edge2, edge_datfg in G.edges.items():
-            for c2 in edge_datfg.get('contraction', {}).values():
+        for edge2, edge_data in G.edges.items():
+            for c2 in edge_data.get('contraction', {}).values():
                 if mob_id == c2['mob_id']:
-                    contracts_to.append(id_to_mobj[edge_datfg['mob_id']])
+                    contracts_to.append(
+                        mng.get_edge(mng.id_to_edge[edge_data['mob_id']], G)
+                    )
                     break
 
         mobj = id_to_mobj[mob_id]
