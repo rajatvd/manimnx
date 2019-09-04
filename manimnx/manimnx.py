@@ -55,6 +55,33 @@ def get_line_edge(ed, G):
     end = x2*RIGHT + y2*UP
     return Line(start, end, color=n1.get('color', WHITE))
 
+# %%
+
+
+def assign_positions(G, pos_func=nx.spring_layout, scale=np.array([6.5, 3.5])):
+    """Assign the `pos` attribute to nodes in G.
+
+    Parameters
+    ----------
+    G : Graph
+        The graph to assign positions to.
+    pos_func : function (Graph) -> dict(node:numpy array)
+        Function which returns a dict of positions as numpy arrays, keyed by
+        nodes in the graph.
+        The positions should be in the box (-1, 1) X (-1, 1).
+        By default, nx.spring_layout is used.
+    scale : ndarray with ndim=2
+        Multiply all the positions from the pos_func by this scale vector.
+        By default [6.5, 3.5] to fill manim's screen.
+
+    """
+    unscaled_pos = pos_func(G)
+    positions = {k: v*scale for k, v in unscaled_pos.items()}
+    for node, pos in positions.items():
+        G.node[node]['pos'] = pos
+
+# %%
+
 
 class ManimGraph(VGroup):
     """A manim VGroup which wraps a networkx Graph.
@@ -99,12 +126,8 @@ class ManimGraph(VGroup):
         self.id_to_edge = {}
 
         n = list(self.graph.nodes())[0]
-        scale = np.array([6.5, 3.5])
         if 'pos' not in self.graph.node[n].keys():
-            unscaled_pos = nx.spring_layout(self.graph)
-            positions = {k: v*scale for k, v in unscaled_pos.items()}
-            for node, pos in positions.items():
-                self.graph.node[node]['pos'] = pos
+            assign_positions(self.graph)
 
         self.count = 0
         self._add_nodes()
