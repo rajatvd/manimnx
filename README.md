@@ -1,5 +1,5 @@
-# manim-nx
-An interface between `networkx` and `manim` to make animating graphs easier.
+# manimnx
+An interface between `networkx` and `manim` to make animating graphs easier. This package is in development and I welcome new feature requests and ideas.
 
 An example animation which transforms between two random graphs:
 
