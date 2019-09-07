@@ -5,3 +5,5 @@ Tex
 videos
 *.ipynb
 manimnx.egg-info
+build
+dist
