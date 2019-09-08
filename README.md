@@ -10,7 +10,7 @@ An example animation which transforms between two random graphs:
 
 Install using this command:
 
-`pip install git+https://github.com/rajatvd/manim-nx`
+`pip install manimnx`
 
 Requires `manimlib` and `networkx`.
 
