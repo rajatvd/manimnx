@@ -5,7 +5,7 @@ An interface between `manim` and `networkx` to make animating graphs easier.
 """
 
 setup(name='manimnx',
-      version='0.1',
+      version='0.1.1',
       description='Interface between `manim` and `networkx`',
       long_description=LONG_DESC,
       author='Rajat Vadiraj Dwaraknath',
