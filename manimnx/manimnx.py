@@ -162,11 +162,11 @@ class TransformAndRemoveSource(Transform):
         super().clean_up_from_scene(scene)
         scene.remove(self.mobject)
 
-# TODO: move this to manimnx package
-# %% TODO: take in custom transform for edges and nodes
 
-
-def transform_graph(mng, G):
+# %%
+def transform_graph(mng, G,
+                    node_transform=Transform,
+                    edge_transform=Transform):
     """Transforms the graph in ManimGraph mng to the graph G.
 
     This is better than just using Transform because it keeps edges and
@@ -195,6 +195,10 @@ def transform_graph(mng, G):
         The ManimGraph object to transform.
     G : Graph
         The graph containing attributes of the target graph.
+    node_transform, edge_transform: Animation
+        These are the animations used to transform between nodes and edges
+        which exist in both the initial and target graphs. By default uses
+        the vanilla Transform from manimlib.
 
     Returns
     -------
@@ -223,7 +227,7 @@ def transform_graph(mng, G):
 
         if mob_id in old_ids:
             # if mng.graph.nodes[mng.id_to_node[mob_id]] != node_data:
-            anims.append(Transform(mng.nodes[mob_id], new_node))
+            anims.append(node_transform(mng.nodes[mob_id], new_node))
         else:
             if 'expansion' in node_data.keys():
                 objs = [id_to_mobj[o['mob_id']]
@@ -251,7 +255,7 @@ def transform_graph(mng, G):
             # TODO: how to check this properly, and is it really needed?
 
             # if mng.graph.edges[mng.id_to_edge[mob_id]] != edge_data:
-            anims.append(Transform(mng.edges[mob_id], new_edge))
+            anims.append(edge_transform(mng.edges[mob_id], new_edge))
         else:
             if 'expansion' in edge_data.keys():
                 objs = [id_to_mobj[o['mob_id']]
@@ -321,3 +325,26 @@ def transform_graph(mng, G):
 
     mng.graph = G
     return anims
+
+
+# %%
+def shift_nodes(nodes, shift, fg):
+    """Shift the pos of nodes in fg by shift in-place."""
+    for node in nodes:
+        fg.nodes[node]['pos'] += shift
+
+
+# %%
+def map_attr(attr, keys, values, fg):
+    """Map the values to the `attr` attribute of elements in fg.
+
+    If keys are singletons, assumes that they are nodes. In all other cases,
+    assumes they are edges.
+    """
+    assert len(keys) == len(values)
+    if len(tuple(keys[0])) == 1:
+        for node, value in zip(keys, values):
+            fg.nodes[node][attr] = value
+    else:
+        for edge, value in zip(keys, values):
+            fg.edges[edge][attr] = value
