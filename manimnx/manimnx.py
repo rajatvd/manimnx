@@ -153,6 +153,21 @@ class ManimGraph(VGroup):
             self.add_to_back(e)
             self.count += 1
 
+    def relabel_nodes(self, old, new):
+        """Relabel the old node with the new label.
+
+        Takes care of mob ids.
+
+        Parameters
+        ----------
+        old : string
+            Old label.
+        new : string
+            New label.
+
+        """
+        self.graph = nx.relabel_nodes(self.graph, {old: new})
+        mng.id_to_node[fg.node[old]['mob_id']] = new
 
 # %%
 
