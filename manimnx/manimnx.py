@@ -24,7 +24,7 @@ def get_dot_node(n, G):
         The Dot VMobject.
 
     """
-    n = G.node[n]
+    n = G.nodes[n]
     node = Dot(color=n.get('color', RED))
     x, y = n['pos']
     node.move_to(x*RIGHT + y*UP)
@@ -47,8 +47,8 @@ def get_line_edge(ed, G):
         The Line VMobject.
 
     """
-    n1 = G.node[ed[0]]
-    n2 = G.node[ed[1]]
+    n1 = G.nodes[ed[0]]
+    n2 = G.nodes[ed[1]]
     x1, y1 = n1['pos']
     x2, y2 = n2['pos']
     start = x1*RIGHT + y1*UP
@@ -78,7 +78,7 @@ def assign_positions(G, pos_func=nx.spring_layout, scale=np.array([6.5, 3.5])):
     unscaled_pos = pos_func(G)
     positions = {k: v*scale for k, v in unscaled_pos.items()}
     for node, pos in positions.items():
-        G.node[node]['pos'] = pos
+        G.nodes[node]['pos'] = pos
 
 # %%
 
@@ -126,7 +126,7 @@ class ManimGraph(VGroup):
         self.id_to_edge = {}
 
         n = list(self.graph.nodes())[0]
-        if 'pos' not in self.graph.node[n].keys():
+        if 'pos' not in self.graph.nodes[n].keys():
             assign_positions(self.graph)
 
         self.count = 0
